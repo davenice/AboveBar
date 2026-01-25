@@ -1,9 +1,11 @@
 #!/bin/bash
 
 export VIDEO_LOCATION="/Users/avteam/Movies"
-export BACKUP_LOCATION="/Volumes/Seagate Backup Plus Drive/ABC Service Videos Backup"
-export ONEDRIVE_VIDEO_LOCATION="/Users/avteam/OneDrive - Above Bar Church/Recordings - Sundays/Raw Video"
-export ONEDRIVE_AUDIO_LOCATION="/Users/avteam/OneDrive - Above Bar Church/Recordings - Sundays/Raw Audio"
+export BACKUP_LOCATION="/Volumes/VideoBackup/ABC Service Videos Backup"
+export FORMER_ONEDRIVE_LOCATIONS="/Users/avteam/OneDrive - Above Bar Church/Recordings - Sundays/"
+export ONEDRIVE_LOCATION="/Users/avteam/OneDrive - Recordings"
+export ONEDRIVE_VIDEO_LOCATION="${ONEDRIVE_LOCATION}/Raw Video"
+export ONEDRIVE_AUDIO_LOCATION="${ONEDRIVE_LOCATION}/Raw Audio"
 export FFMPEG=/Users/avteam/bin/ffmpeg
 
 export MARKER_FILE=DoNotDelete-ProcessedToHere.mp4
@@ -56,24 +58,22 @@ do
 
 	# back up to external drive, check hash
 # backup drive is read only currently
-#	echo "Backing up $INFILEMP4 to backup location $BACKUP_LOCATION"
-#	cp "$INFILEMP4" "$BACKUP_LOCATION"
-#	cd "$BACKUP_LOCATION"
-#	MP4HASH_BACKUP=`md5 -q "$INFILEMP4"`
-#	if test "$MP4HASH" != "$MP4HASH_BACKUP";
-#	then
-#		echo "MP4 backup file does not have the same hash as the original"
-#		exit 13
-#	fi
+	echo "Backing up $INFILEMP4 to backup location $BACKUP_LOCATION"
+	cp "$INFILEMP4" "$BACKUP_LOCATION"
+	cd "$BACKUP_LOCATION"
+	MP4HASH_BACKUP=`md5 -q "$INFILEMP4"`
+	if test "$MP4HASH" != "$MP4HASH_BACKUP";
+	then
+		echo "MP4 backup file does not have the same hash as the original"
+		exit 13
+	fi
 
 	# move to onedrive
 	echo "Moving files to OneDrive"
 	if [ -e "$VIDEO_LOCATION/$INFILEMP4" ]
 	then
 		echo "Moving $VIDEO_LOCATION/$INFILEMP4 to $ONEDRIVE_VIDEO_LOCATION"
-		cp "$VIDEO_LOCATION/$INFILEMP4" "$ONEDRIVE_VIDEO_LOCATION"
-# temporarily copy rather than moving, until backup drive is fixed
-#		mv "$VIDEO_LOCATION/$INFILEMP4" "$ONEDRIVE_VIDEO_LOCATION"
+		mv "$VIDEO_LOCATION/$INFILEMP4" "$ONEDRIVE_VIDEO_LOCATION"
 	fi
 	if [ -e "$VIDEO_LOCATION/$OUTFILEMP3" ]
 	then
